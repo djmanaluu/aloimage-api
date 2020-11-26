@@ -23,20 +23,16 @@ final class UserLoginFlowController: RouteCollection {
         
         // Register
         userRoute.post(User.self, at: "register", use: register(_:user:))
-        
-        
-        
-        
-        
-        userRoute.get(use: getUsers(_:))
     }
     
     // MARK: - Request
     
-    private func register(_ req: Request, user: User) throws -> Future<HTTPStatus> {
+    private func register(_ req: Request, user: User) throws -> Future<EmptyResponse> {
         user.password = try BCrypt.hash(user.password)
         
-        return user.save(on: req).transform(to: .created)
+        return user.save(on: req).map { _ -> EmptyResponse in
+            return EmptyResponse()
+        }
     }
     
     private func login(_ req: Request) throws -> Future<Token> {

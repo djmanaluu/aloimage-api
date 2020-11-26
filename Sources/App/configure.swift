@@ -11,7 +11,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(router, as: Router.self)
 
     var middlewares = MiddlewareConfig()
-    // middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
+    
     middlewares.use(ErrorMiddleware.self)
     services.register(middlewares)
     
@@ -39,6 +39,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     migrations.add(model: User.self, database: .psql)
     migrations.add(model: Token.self, database: .psql)
+//    migrations.add(model: ImageContent.self, database: .psql)
     
     services.register(migrations)
     try services.register(AuthenticationProvider())
