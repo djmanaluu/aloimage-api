@@ -23,6 +23,12 @@ final class UserLoginFlowController: RouteCollection {
         
         // Register
         userRoute.post(User.self, at: "register", use: register(_:user:))
+        
+        
+        
+        
+        
+        userRoute.get(use: getUsers(_:))
     }
     
     // MARK: - Request
@@ -48,5 +54,13 @@ final class UserLoginFlowController: RouteCollection {
                 return try Token.generate(for: user).save(on: req)
             }
         }
+    }
+    
+    
+    
+    
+    
+    private func getUsers(_ req: Request) throws -> Future<[User]> {
+        return User.quer(on: req).all()
     }
 }

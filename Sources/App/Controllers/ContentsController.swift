@@ -15,7 +15,7 @@ final class ContentsController: RouteCollection {
         let contentsRoute: Router = router.grouped("api", "contents")
         
         contentsRoute.get(use: getContents(_:))
-        contentsRoute.post(BaseParameter<ImageContent>.self, at: "", use: addContent(_:parameter:))
+        contentsRoute.post(BaseParameter<ImageContent>.self, at: "add", use: addContent(_:parameter:))
     }
     
     // MARK: - Request
