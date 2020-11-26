@@ -21,7 +21,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
       databaseConfig = PostgreSQLDatabaseConfig(url: url)!
     }
     else {
-        let databaseConfig = PostgreSQLDatabaseConfig(
+        databaseConfig = PostgreSQLDatabaseConfig(
             hostname: Environment.get("DATABASE_HOSTNAME") ?? "localhost",
             username: "vapor_username",
             database: "vapor_database",
