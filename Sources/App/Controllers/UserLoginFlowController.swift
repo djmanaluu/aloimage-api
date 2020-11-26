@@ -61,6 +61,6 @@ final class UserLoginFlowController: RouteCollection {
     
     
     private func getUsers(_ req: Request) throws -> Future<[User]> {
-        return User.quer(on: req).all()
+        return User.query(on: req).all()
     }
 }
