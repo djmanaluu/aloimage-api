@@ -14,9 +14,8 @@ final class User: Content, PostgreSQLUUIDModel, Parameter {
     var email: String
     var password: String
     
-    init(email: String, password: String) {
-        self.email = email
-        self.password = password
+    var profiles: Children<User, Profile> {
+        return children(\.userID)
     }
 }
 
