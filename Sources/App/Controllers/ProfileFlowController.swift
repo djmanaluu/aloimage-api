@@ -15,6 +15,7 @@ final class ProfileFlowController: RouteCollection {
         let grouped: Router = router.grouped("api", "profile")
         
         grouped.get(User.parameter, use: getProfile(_:))
+        grouped.post(BaseParameter.self, use: postProfile(_:baseParameter:))
     }
     
     // MARK: - Request
