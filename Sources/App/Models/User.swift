@@ -17,6 +17,10 @@ final class User: Content, PostgreSQLUUIDModel, Parameter {
     var profiles: Children<User, Profile> {
         return children(\.userID)
     }
+    
+    var tokens: Children<User, Token> {
+        return children(\.userID)
+    }
 }
 
 extension User: PostgreSQLMigration {

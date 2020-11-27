@@ -31,17 +31,21 @@ final class ProfileFlowController: RouteCollection {
         }
     }
     
-    private func postProfile(_ req: Request, profile: Profile) throws -> Future<EmptyResponse> {
-        User.query(on: req).filter(\.id == profile.userID).first().flatMap { user -> Future<EmptyResponse> in
-            guard let user: User = user else { throw Abort(HTTPStatus.notFound) }
+    private func postProfile(_ req: Request, baseParameter: BaseParameter<Profile>) throws -> Future<EmptyResponse> {
+        return Token.query(on: req).filter(\.token == baseParameter.token).first().flatMap { token -> Future<EmptyResponse> in
+            let profile: Profile = baseParameter.data
             
-            return try user.profiles.query(on: req).first().flatMap { savedProfile -> Future<EmptyResponse> in
-                guard let savedProfile: Profile = savedProfile else {
-                    return profile.save(on: req).transform(to: EmptyResponse())
-                }
+            return User.query(on: req).filter(\.id == profile.userID).first().flatMap { user -> Future<EmptyResponse> in
+                guard let user: User = user else { throw Abort(HTTPStatus.notFound) }
                 
-                return savedProfile.delete(on: req).flatMap { _ -> Future<EmptyResponse> in
-                    profile.save(on: req).transform(to: EmptyResponse())
+                return try user.profiles.query(on: req).first().flatMap { savedProfile -> Future<EmptyResponse> in
+                    guard let savedProfile: Profile = savedProfile else {
+                        return profile.save(on: req).transform(to: EmptyResponse())
+                    }
+                    
+                    return savedProfile.delete(on: req).flatMap { _ -> Future<EmptyResponse> in
+                        profile.save(on: req).transform(to: EmptyResponse())
+                    }
                 }
             }
         }

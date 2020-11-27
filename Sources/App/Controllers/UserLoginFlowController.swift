@@ -23,6 +23,12 @@ final class UserLoginFlowController: RouteCollection {
         
         // Register
         userRoute.post(User.self, at: "register", use: register(_:user:))
+        
+        // Logout
+        userRoute.post("logout", User.parameter, use: logout(_:))
+        
+        // GET USERS
+        userRoute.get(use: getUsers(_:))
     }
     
     // MARK: - Request
@@ -52,9 +58,21 @@ final class UserLoginFlowController: RouteCollection {
         }
     }
     
-    
-    
-    
+    private func logout(_ req: Request) throws -> Future<EmptyResponse> {
+        return try req.parameters.next(User.self).flatMap { user -> Future<EmptyResponse> in
+            return try user.tokens.query(on: req).all().flatMap { tokens -> Future<EmptyResponse> in
+                var deleteTokens: [Future<Void>] = []
+                
+                for token in tokens {
+                    deleteTokens.append(token.delete(on: req))
+                }
+                
+                return deleteTokens.flatten(on: req).map { _ -> EmptyResponse in
+                    return EmptyResponse()
+                }
+            }
+        }
+    }
     
     private func getUsers(_ req: Request) throws -> Future<[User]> {
         return User.query(on: req).all()

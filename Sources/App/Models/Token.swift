@@ -14,6 +14,10 @@ final class Token: Content, PostgreSQLUUIDModel {
     var token: String
     var userID: User.ID
     
+    var user: Parent<Token, User> {
+        return parent(\.userID)
+    }
+    
     init(token: String, userID: User.ID) {
         self.token = token
         self.userID = userID
